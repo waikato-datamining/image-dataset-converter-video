@@ -40,10 +40,13 @@ setup(
     author_email='fracpete@waikato.ac.nz',
     entry_points={
         "idc.readers": [
+            "idc_video_readers1=idc.video.reader:seppl.io.Reader",
         ],
         "idc.filters": [
+            "idc_video_filters1=idc.video.filter:seppl.io.Filter",
         ],
         "idc.writers": [
+            "idc_video_writers1=idc.video.writer:seppl.io.Writer",
         ]
     },
 )
