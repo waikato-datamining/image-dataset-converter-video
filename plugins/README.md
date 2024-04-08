@@ -7,4 +7,5 @@
 * [drop-frames](drop-frames.md)
 
 ## Writers
+* [calc-frame-changes](calc-frame-changes.md)
 * [to-video-file](to-video-file.md)
