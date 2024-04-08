@@ -57,7 +57,7 @@ class FromVideoFileReader(Reader):
         :return: the description
         :rtype: str
         """
-        return "Reads frames from video a file."
+        return "Reads frames from a video file."
 
     def _create_argparser(self) -> argparse.ArgumentParser:
         """

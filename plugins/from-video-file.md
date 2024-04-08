@@ -2,7 +2,7 @@
 
 * generates: idc.api.ImageData
 
-Reads frames from video a file.
+Reads frames from a video file.
 
 ```
 usage: from-video-file [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
@@ -10,7 +10,7 @@ usage: from-video-file [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                        [-T TO_FRAME] [-n NTH_FRAME] [-m MAX_FRAMES]
                        [-p PREFIX]
 
-Reads frames from video a file.
+Reads frames from a video file.
 
 optional arguments:
   -h, --help            show this help message and exit
