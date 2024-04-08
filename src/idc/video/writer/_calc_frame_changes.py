@@ -150,7 +150,7 @@ class CalcFrameChanges(StreamWriter):
             if self._last_image is None:
                 # shift state
                 self._last_image = img
-                return
+                continue
 
             # detect change
             ratio, changed = detect_change(self._last_image, img,
