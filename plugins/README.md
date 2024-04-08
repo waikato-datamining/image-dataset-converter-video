@@ -5,6 +5,7 @@
 
 ## Filters
 * [drop-frames](drop-frames.md)
+* [skip-similar-frames](skip-similar-frames.md)
 
 ## Writers
 * [calc-frame-changes](calc-frame-changes.md)
