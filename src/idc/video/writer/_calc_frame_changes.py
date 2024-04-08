@@ -24,13 +24,16 @@ OUTPUT_FORMATS = [
 
 
 class CalcFrameChanges(StreamWriter):
+    """
+    Calculates the changes between frames, which can be used with the skip-similar-frames filter.
+    """
 
     def __init__(self, conversion: str = CONVERSION_GRAY, bw_threshold: int = 128,
                  change_threshold: float = 0.01, num_bins: int = 20,
                  output_file: str = None, output_format: str = OUTPUT_FORMAT_TEXT,
                  logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
-        Initializes the reader.
+        Initializes the writer.
 
         :param conversion: how to convert the BGR frames before calculating the changes
         :type conversion: str

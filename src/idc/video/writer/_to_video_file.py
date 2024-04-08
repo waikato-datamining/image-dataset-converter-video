@@ -8,11 +8,14 @@ from idc.api import ImageData, StreamWriter, make_list
 
 
 class VideoFileWriter(StreamWriter):
+    """
+    Saves the incoming images as frames in the specified MJPEG file.
+    """
 
     def __init__(self, output_file: str = None, fps: int = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
-        Initializes the reader.
+        Initializes the writer.
 
         :param output_file: the MJPEG file to write the frames to
         :type output_file: str

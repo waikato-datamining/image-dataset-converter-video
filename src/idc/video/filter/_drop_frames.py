@@ -8,7 +8,7 @@ from idc.api import flatten_list, make_list, ImageData, ImageClassificationData,
 
 class DropFrames(Filter):
     """
-    Suppresses records after the specified maximum number of records have passed through.
+    Drops frames from the stream.
     """
 
     def __init__(self, nth_frame: int = -1, logger_name: str = None, logging_level: str = LOGGING_WARNING):
