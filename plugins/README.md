@@ -5,6 +5,7 @@
 
 ## Filters
 * [drop-frames](drop-frames.md)
+* [filter-frames-by-label](filter-frames-by-label.md)
 * [skip-similar-frames](skip-similar-frames.md)
 
 ## Writers
