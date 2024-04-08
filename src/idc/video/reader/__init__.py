@@ -1,2 +1,2 @@
-from ._from_video_file import FromVideoFileReader
-from ._from_webcam import FromWebcamReader
+from ._from_video_file import VideoFileReader
+from ._from_webcam import WebcamReader

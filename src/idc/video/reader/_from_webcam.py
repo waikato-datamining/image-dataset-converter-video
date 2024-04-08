@@ -8,7 +8,7 @@ from wai.logging import LOGGING_WARNING
 from idc.api import DATATYPES, data_type_to_class, ImageData, Reader, FORMAT_JPEG
 
 
-class FromWebcamReader(Reader):
+class WebcamReader(Reader):
     """
     Reads frames from a webcam.
     """
