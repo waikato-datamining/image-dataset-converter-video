@@ -1,4 +1,4 @@
-# image-dataset-converter plugins
+# video plugins
 ## Readers
 * [from-video-file](from-video-file.md)
 * [from-webcam](from-webcam.md)
