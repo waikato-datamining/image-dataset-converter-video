@@ -35,6 +35,7 @@ setup(
         "opencv-python",
         "termplotlib",
         "cap_from_youtube",
+        "vidgear",
     ],
     version="0.0.1",
     author='Peter Reutemann',
