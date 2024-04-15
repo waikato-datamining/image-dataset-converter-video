@@ -22,7 +22,8 @@ optional arguments:
   -i YOUTUBE_URL, --youtube_url YOUTUBE_URL
                         The Youtube URL to read from. (default: None)
   -r RESOLUTION, --resolution RESOLUTION
-                        The resolution to use. (default: None)
+                        The resolution to use, e.g., '480p' or 'best'.
+                        (default: best)
   -t {ic,is,od}, --data_type {ic,is,od}
                         The type of data to forward (default: None)
   -F FROM_FRAME, --from_frame FROM_FRAME

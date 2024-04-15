@@ -11,7 +11,7 @@ from idc.api import DATATYPES, data_type_to_class, ImageData, Reader, FORMAT_JPE
 
 class YoutubeReader(Reader):
     """
-    Reads frames from a webcam.
+    Reads frames from a Youtube video.
     """
 
     def __init__(self, url: str = None, resolution: str = None, from_frame: int = None, to_frame: int = None,
@@ -81,7 +81,7 @@ class YoutubeReader(Reader):
         """
         parser = super()._create_argparser()
         parser.add_argument("-i", "--youtube_url", type=str, default=None, help="The Youtube URL to read from.", required=True)
-        parser.add_argument("-r", "--resolution", type=str, default=None, help="The resolution to use.", required=False)
+        parser.add_argument("-r", "--resolution", type=str, default="best", help="The resolution to use, e.g., '480p' or 'best'.", required=False)
         parser.add_argument("-t", "--data_type", choices=DATATYPES, type=str, default=None, help="The type of data to forward", required=True)
         parser.add_argument("-F", "--from_frame", type=int, default=1, help="Determines with which frame to start the stream (1-based index).", required=False)
         parser.add_argument("-T", "--to_frame", type=int, default=-1, help="Determines after which frame to stop (1-based index); ignored if <=0.", required=False)
@@ -140,6 +140,8 @@ class YoutubeReader(Reader):
             self.max_frames = -1
         if self.prefix is None:
             self.prefix = ""
+        if self.resolution is None:
+            self.resolution = "best"
         self._inputs = [self.youtube_url]
 
     def read(self) -> Iterable:
@@ -153,7 +155,7 @@ class YoutubeReader(Reader):
         self.session.current_input = self.prefix + str(self._current_input)
         self.logger().info("Reading from Youtube: " + str(self._current_input))
 
-        self._cap = cap_from_youtube(self.youtube_url, resolution=self.resolution)
+        self._cap = cap_from_youtube(str(self._current_input), resolution=self.resolution)
         self._frame_no = 0
         self._frame_count = 0
 
