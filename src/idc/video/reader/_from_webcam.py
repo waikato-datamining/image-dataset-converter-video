@@ -27,6 +27,8 @@ class WebcamReader(Reader):
         :type to_frame: int
         :param nth_frame: determines whether frames get skipped
         :type nth_frame: int
+        :param max_frames: the maximum number of frames to read
+        :type max_frames: int
         :param data_type: the type of output to generate from the images
         :type data_type: str
         :param logger_name: the name to use for the logger
