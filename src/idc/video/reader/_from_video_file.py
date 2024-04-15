@@ -20,6 +20,14 @@ class VideoFileReader(Reader):
         Initializes the reader.
 
         :param source: the filename
+        :param from_frame: the index of the first frame to use
+        :type from_frame: int
+        :param to_frame: the index of the last frame to use
+        :type to_frame: int
+        :param nth_frame: determines whether frames get skipped
+        :type nth_frame: int
+        :param max_frames: the maximum number of frames to read
+        :type max_frames: int
         :param data_type: the type of output to generate from the images
         :type data_type: str
         :param logger_name: the name to use for the logger

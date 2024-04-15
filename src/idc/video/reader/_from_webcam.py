@@ -21,6 +21,12 @@ class WebcamReader(Reader):
 
         :param webcam_id: the ID of the webcam to read from
         :type webcam_id: int
+        :param from_frame: the index of the first frame to use
+        :type from_frame: int
+        :param to_frame: the index of the last frame to use
+        :type to_frame: int
+        :param nth_frame: determines whether frames get skipped
+        :type nth_frame: int
         :param data_type: the type of output to generate from the images
         :type data_type: str
         :param logger_name: the name to use for the logger
