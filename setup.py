@@ -34,6 +34,7 @@ setup(
         "image-dataset-converter",
         "opencv-python",
         "termplotlib",
+        "cap_from_youtube",
     ],
     version="0.0.1",
     author='Peter Reutemann',

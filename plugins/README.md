@@ -2,6 +2,7 @@
 ## Readers
 * [from-video-file](from-video-file.md)
 * [from-webcam](from-webcam.md)
+* [from-youtube](from-youtube.md)
 
 ## Filters
 * [drop-frames](drop-frames.md)
