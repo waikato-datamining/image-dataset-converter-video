@@ -41,14 +41,8 @@ setup(
     author='Peter Reutemann',
     author_email='fracpete@waikato.ac.nz',
     entry_points={
-        "idc.readers": [
-            "idc_video_readers1=idc.video.reader:seppl.io.Reader",
+        "class_lister": [
+            "idc.video=idc.video.class_lister",
         ],
-        "idc.filters": [
-            "idc_video_filters1=idc.video.filter:seppl.io.Filter",
-        ],
-        "idc.writers": [
-            "idc_video_writers1=idc.video.writer:seppl.io.Writer",
-        ]
     },
 )
