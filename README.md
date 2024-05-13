@@ -1,5 +1,5 @@
 # image-dataset-converter-video
-Video support for the image-dataset-converter library.
+Video support for the [image-dataset-converter](https://github.com/waikato-datamining/image-dataset-converter) library.
 
 
 ## Installation
