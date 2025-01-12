@@ -7,7 +7,7 @@ Video support for the [image-dataset-converter](https://github.com/waikato-datam
 Via PyPI:
 
 ```bash
-pip install image-dataset-converter-video
+pip install image_dataset_converter_video
 ```
 
 The latest code straight from the repository:
