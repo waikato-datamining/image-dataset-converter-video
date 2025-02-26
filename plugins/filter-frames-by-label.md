@@ -15,7 +15,7 @@ usage: filter-frames-by-label [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 Filters frames from the stream using the labels in the annotations, i.e.,
 keeps or drops frames depending on presence/absence of labels.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

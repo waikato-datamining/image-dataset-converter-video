@@ -12,7 +12,7 @@ usage: skip-similar-frames [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
 Skips frames in the stream that are deemed too similar.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)

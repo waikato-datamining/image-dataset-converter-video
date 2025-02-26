@@ -13,7 +13,7 @@ usage: calc-frame-changes [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 Calculates the changes between frames, which can be used with the skip-
 similar-frames filter.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {DEBUG,INFO,WARNING,ERROR,CRITICAL}, --logging_level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
                         The logging level to use. (default: WARN)
