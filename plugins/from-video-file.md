@@ -8,7 +8,8 @@ Reads frames from a video file.
 usage: from-video-file [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                        [-N LOGGER_NAME] [-i [INPUT ...]] [-I [INPUT_LIST ...]]
                        -t {ic,is,od} [-F FROM_FRAME] [-T TO_FRAME]
-                       [-n NTH_FRAME] [-m MAX_FRAMES] [-p PREFIX]
+                       [-n NTH_FRAME] [-f FPS_FACTOR] [-m MAX_FRAMES]
+                       [-p PREFIX]
 
 Reads frames from a video file.
 
@@ -35,7 +36,15 @@ options:
                         ignored if <=0. (default: -1)
   -n NTH_FRAME, --nth_frame NTH_FRAME
                         Determines whether frames get skipped and only evert
-                        nth frame gets forwarded. (default: 1)
+                        nth frame gets forwarded; <1 uses rounded up fraction
+                        of frames-per-second in the video, e.g. 0.2 of video
+                        with 25 fps results in every 5th frame being returned.
+                        (default: 1)
+  -f FPS_FACTOR, --fps_factor FPS_FACTOR
+                        Multiplier applied to the frames-per-second (fps) of
+                        the video and rounded up (ceiling) to determine the
+                        actual nth frame to return; overrides -n/--nth_frame.
+                        (default: None)
   -m MAX_FRAMES, --max_frames MAX_FRAMES
                         Determines the maximum number of frames to read;
                         ignored if <=0. (default: -1)

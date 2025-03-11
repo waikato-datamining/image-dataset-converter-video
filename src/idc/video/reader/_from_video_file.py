@@ -1,5 +1,6 @@
 import argparse
 import cv2
+import math
 import os
 from typing import List, Iterable, Union
 
@@ -15,8 +16,8 @@ class VideoFileReader(Reader):
     """
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
-                 from_frame: int = None, to_frame: int = None,
-                 nth_frame: int = None, max_frames: int = None, prefix: str = None,
+                 from_frame: int = None, to_frame: int = None, nth_frame: int = None,
+                 fps_factor: float = None, max_frames: int = None, prefix: str = None,
                  data_type: str = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
@@ -29,6 +30,8 @@ class VideoFileReader(Reader):
         :type to_frame: int
         :param nth_frame: determines whether frames get skipped
         :type nth_frame: int
+        :param fps_factor: the factor for the frames-per-second (fps) of the video for determining the actual nth_frame to use (overrides nth_frame)
+        :type fps_factor: float
         :param max_frames: the maximum number of frames to read
         :type max_frames: int
         :param data_type: the type of output to generate from the images
@@ -45,6 +48,7 @@ class VideoFileReader(Reader):
         self.from_frame = from_frame
         self.to_frame = to_frame
         self.nth_frame = nth_frame
+        self.fps_factor = fps_factor
         self.max_frames = max_frames
         self.prefix = prefix
         self._cap = None
@@ -52,6 +56,7 @@ class VideoFileReader(Reader):
         self._frame_count = None
         self._current_input = None
         self._inputs = None
+        self.actual_nth_frame = 0
 
     def name(self) -> str:
         """
@@ -84,7 +89,8 @@ class VideoFileReader(Reader):
         parser.add_argument("-t", "--data_type", choices=DATATYPES, type=str, default=None, help="The type of data to forward", required=True)
         parser.add_argument("-F", "--from_frame", type=int, default=1, help="Determines with which frame to start the stream (1-based index).", required=False)
         parser.add_argument("-T", "--to_frame", type=int, default=-1, help="Determines after which frame to stop (1-based index); ignored if <=0.", required=False)
-        parser.add_argument("-n", "--nth_frame", type=int, default=1, help="Determines whether frames get skipped and only evert nth frame gets forwarded.", required=False)
+        parser.add_argument("-n", "--nth_frame", type=int, default=1, help="Determines whether frames get skipped and only evert nth frame gets forwarded; <1 uses rounded up fraction of frames-per-second in the video, e.g. 0.2 of video with 25 fps results in every 5th frame being returned.", required=False)
+        parser.add_argument("-f", "--fps_factor", type=float, default=None, help="Multiplier applied to the frames-per-second (fps) of the video and rounded up (ceiling) to determine the actual nth frame to return; overrides -n/--nth_frame.", required=False)
         parser.add_argument("-m", "--max_frames", type=int, default=-1, help="Determines the maximum number of frames to read; ignored if <=0.", required=False)
         parser.add_argument("-p", "--prefix", type=str, help="The prefix to use for the frames", required=False, default="")
         return parser
@@ -103,6 +109,7 @@ class VideoFileReader(Reader):
         self.from_frame = ns.from_frame
         self.to_frame = ns.to_frame
         self.nth_frame = ns.nth_frame
+        self.fps_factor = ns.fps_factor
         self.max_frames = ns.max_frames
         self.prefix = ns.prefix
 
@@ -154,6 +161,20 @@ class VideoFileReader(Reader):
         self._frame_no = 0
         self._frame_count = 0
 
+        try:
+            fps = self._cap.get(cv2.CAP_PROP_FPS)
+            self.logger().info("fps: %f" % fps)
+        except:
+            fps = None
+
+        # determine actual nth frame to use
+        self.actual_nth_frame = self.nth_frame
+        if (self.fps_factor is not None) and (fps is not None):
+            self.actual_nth_frame = math.ceil(fps * self.fps_factor)
+            self.logger().info("nth frame calculated from fps factor: %d" % self.actual_nth_frame)
+        elif self.actual_nth_frame > 1:
+            self.logger().info("nth frame: %d" % self.actual_nth_frame)
+
         cls = data_type_to_class(self.data_type)
 
         # next frame?
@@ -174,7 +195,7 @@ class VideoFileReader(Reader):
                         break
 
                 # skip frame?
-                if (self.nth_frame > 1) and (count < self.nth_frame):
+                if (self.actual_nth_frame > 1) and (count < self.actual_nth_frame):
                     continue
 
                 # max frames reached?
