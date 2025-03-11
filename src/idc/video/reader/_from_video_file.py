@@ -1,8 +1,9 @@
 import argparse
 import cv2
 import os
-from typing import List, Iterable
+from typing import List, Iterable, Union
 
+from seppl.io import locate_files
 from wai.logging import LOGGING_WARNING
 
 from idc.api import DATATYPES, data_type_to_class, ImageData, Reader, FORMAT_JPEG
@@ -13,13 +14,15 @@ class VideoFileReader(Reader):
     Reads frames from video files.
     """
 
-    def __init__(self, source: str = None, from_frame: int = None, to_frame: int = None,
+    def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
+                 from_frame: int = None, to_frame: int = None,
                  nth_frame: int = None, max_frames: int = None, prefix: str = None,
                  data_type: str = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
-        :param source: the filename
+        :param source: the filename(s)
+        :param source_list: the file(s) with filename(s)
         :param from_frame: the index of the first frame to use
         :type from_frame: int
         :param to_frame: the index of the last frame to use
@@ -37,6 +40,7 @@ class VideoFileReader(Reader):
         """
         super().__init__(logger_name=logger_name, logging_level=logging_level)
         self.source = source
+        self.source_list = source_list
         self.data_type = data_type
         self.from_frame = from_frame
         self.to_frame = to_frame
@@ -75,7 +79,8 @@ class VideoFileReader(Reader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the video file to read", required=True)
+        parser.add_argument("-i", "--input", type=str, help="Path to the video file(s) to read; glob syntax is supported", required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the video files to read", required=False, nargs="*")
         parser.add_argument("-t", "--data_type", choices=DATATYPES, type=str, default=None, help="The type of data to forward", required=True)
         parser.add_argument("-F", "--from_frame", type=int, default=1, help="Determines with which frame to start the stream (1-based index).", required=False)
         parser.add_argument("-T", "--to_frame", type=int, default=-1, help="Determines after which frame to stop (1-based index); ignored if <=0.", required=False)
@@ -93,6 +98,7 @@ class VideoFileReader(Reader):
         """
         super()._apply_args(ns)
         self.source = ns.input
+        self.source_list = ns.input_list
         self.data_type = ns.data_type
         self.from_frame = ns.from_frame
         self.to_frame = ns.to_frame
@@ -131,7 +137,7 @@ class VideoFileReader(Reader):
             self.max_frames = -1
         if self.prefix is None:
             self.prefix = ""
-        self._inputs = [self.source]
+        self._inputs = locate_files(self.source, input_lists=self.source_list, fail_if_empty=True)
 
     def read(self) -> Iterable:
         """
