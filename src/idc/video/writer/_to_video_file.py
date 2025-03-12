@@ -5,9 +5,10 @@ from typing import List
 
 from wai.logging import LOGGING_WARNING
 from idc.api import ImageData, StreamWriter, make_list
+from seppl import placeholder_list, InputBasedPlaceholderSupporter
 
 
-class VideoFileWriter(StreamWriter):
+class VideoFileWriter(StreamWriter, InputBasedPlaceholderSupporter):
     """
     Saves the incoming images as frames in the specified MJPEG file.
     """
@@ -30,6 +31,7 @@ class VideoFileWriter(StreamWriter):
         self.output_file = output_file
         self.fps = fps
         self._out = None
+        self._last_output_file = None
 
     def name(self) -> str:
         """
@@ -57,7 +59,7 @@ class VideoFileWriter(StreamWriter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-o", "--output_file", type=str, help="The MJPEG file to save the incoming frames to.", required=True)
+        parser.add_argument("-o", "--output_file", type=str, help="The MJPEG file to save the incoming frames to. " + placeholder_list(obj=self), required=True)
         parser.add_argument("-f", "--fps", metavar="FPS", type=int, default=25, help="The frames-per-second to use for the video.", required=False)
         return parser
 
@@ -96,9 +98,30 @@ class VideoFileWriter(StreamWriter):
         :param data: the data to write (single record or iterable of records)
         """
         for item in make_list(data):
-            if self._out is None:
+            output_file = self.session.expand_placeholders(self.output_file)
+            if (self._out is None) or (output_file != self._last_output_file):
+                self._close_stream()
                 w, h = item.image.size
-                self._out = cv2.VideoWriter(self.output_file, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), self.fps, (w, h))
+                self._out = cv2.VideoWriter(output_file, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), self.fps, (w, h))
+                self._last_output_file = output_file
 
             img = cv2.cvtColor(np.array(item.image), cv2.COLOR_RGB2BGR)
             self._out.write(img)
+
+    def _close_stream(self):
+        """
+        Closes the output stream.
+        """
+        if self._out is not None:
+            try:
+                self._out.release()
+            except:
+                pass
+            self._out = None
+
+    def finalize(self):
+        """
+        Finishes the processing, e.g., for closing files or databases.
+        """
+        super().finalize()
+        self._close_stream()

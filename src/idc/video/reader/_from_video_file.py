@@ -4,13 +4,14 @@ import math
 import os
 from typing import List, Iterable, Union
 
+from seppl import PlaceholderSupporter, placeholder_list
 from seppl.io import locate_files
 from wai.logging import LOGGING_WARNING
 
 from idc.api import DATATYPES, data_type_to_class, ImageData, Reader, FORMAT_JPEG
 
 
-class VideoFileReader(Reader):
+class VideoFileReader(Reader, PlaceholderSupporter):
     """
     Reads frames from video files.
     """
@@ -84,8 +85,8 @@ class VideoFileReader(Reader):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-i", "--input", type=str, help="Path to the video file(s) to read; glob syntax is supported", required=False, nargs="*")
-        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the video files to read", required=False, nargs="*")
+        parser.add_argument("-i", "--input", type=str, help="Path to the video file(s) to read; glob syntax is supported; " + placeholder_list(obj=self), required=False, nargs="*")
+        parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the video files to read; " + placeholder_list(obj=self), required=False, nargs="*")
         parser.add_argument("-t", "--data_type", choices=DATATYPES, type=str, default=None, help="The type of data to forward", required=True)
         parser.add_argument("-F", "--from_frame", type=int, default=1, help="Determines with which frame to start the stream (1-based index).", required=False)
         parser.add_argument("-T", "--to_frame", type=int, default=-1, help="Determines after which frame to stop (1-based index); ignored if <=0.", required=False)

@@ -11,6 +11,7 @@ from typing import List
 from wai.logging import LOGGING_WARNING
 from idc.api import ImageData, StreamWriter, make_list
 from idc.video.util.change_detection import CONVERSION_GRAY, CONVERSIONS, detect_change
+from seppl import placeholder_list, InputBasedPlaceholderSupporter
 
 
 OUTPUT_FORMAT_TEXT = "text"
@@ -23,7 +24,7 @@ OUTPUT_FORMATS = [
 ]
 
 
-class CalcFrameChanges(StreamWriter):
+class CalcFrameChanges(StreamWriter, InputBasedPlaceholderSupporter):
     """
     Calculates the changes between frames, which can be used with the skip-similar-frames filter.
     """
@@ -90,7 +91,7 @@ class CalcFrameChanges(StreamWriter):
         parser.add_argument("-b", "--bw_threshold", type=int, help="The threshold to use for converting a gray-scale like image to black and white (0-255).", required=False, default=128)
         parser.add_argument("-t", "--change_threshold", type=float, help="The ratio of pixels that changed relative to size of image (0-1).", required=False, default=0.01)
         parser.add_argument("-B", "--num_bins", type=int, help="The number of bins to use for the histogram.", required=False, default=20)
-        parser.add_argument("-o", "--output_file", type=str, help="The file to write to statistics to, stdout if not provided.", required=False, default=None)
+        parser.add_argument("-o", "--output_file", type=str, help="The file to write to statistics to, stdout if not provided. " + placeholder_list(obj=self), required=False, default=None)
         parser.add_argument("-f", "--output_format", choices=OUTPUT_FORMATS, default=OUTPUT_FORMAT_TEXT, help="The format to use for the statistics.", required=False)
         return parser
 
@@ -155,7 +156,7 @@ class CalcFrameChanges(StreamWriter):
             # detect change
             ratio, changed = detect_change(self._last_image, img,
                                            self.conversion, self.bw_threshold, self.change_threshold)
-            self.logger().info("%s (ratio/changed): %f -> %s" % (item.image_name, ratio, str(changed)))
+            self.logger().debug("%s (ratio/changed): %f -> %s" % (item.image_name, ratio, str(changed)))
 
             if changed:
                 # shift state
@@ -171,6 +172,9 @@ class CalcFrameChanges(StreamWriter):
             return
 
         use_stdout = (self.output_file is None) or (len(self.output_file) == 0)
+        output_file = (None if use_stdout else self.session.expand_placeholders(self.output_file))
+        if output_file is not None:
+            self.logger().info("Writing stats to: %s" % output_file)
         counts, bin_edges = np.histogram(self._ratios, bins=self.num_bins)
 
         # text
@@ -180,7 +184,7 @@ class CalcFrameChanges(StreamWriter):
             if use_stdout:
                 fig.show()
             else:
-                with open(self.output_file, "w") as fp:
+                with open(output_file, "w") as fp:
                     fp.write(fig.get_string())
                     fp.write("\n")
 
@@ -193,7 +197,7 @@ class CalcFrameChanges(StreamWriter):
                 writer = csv.writer(sys.stdout)
                 writer.writerows(data)
             else:
-                with open(self.output_file, "w") as fp:
+                with open(output_file, "w") as fp:
                     writer = csv.writer(fp)
                     writer.writerows(data)
 
@@ -210,7 +214,7 @@ class CalcFrameChanges(StreamWriter):
             if use_stdout:
                 print(json.dumps(data, indent=2))
             else:
-                with open(self.output_file, "w") as fp:
+                with open(output_file, "w") as fp:
                     json.dump(data, fp, indent=2)
 
     def finalize(self):

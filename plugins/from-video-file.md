@@ -22,10 +22,12 @@ options:
                         name by default (default: None)
   -i [INPUT ...], --input [INPUT ...]
                         Path to the video file(s) to read; glob syntax is
-                        supported (default: None)
+                        supported; Supported placeholders: {HOME}, {CWD},
+                        {TMP} (default: None)
   -I [INPUT_LIST ...], --input_list [INPUT_LIST ...]
                         Path to the text file(s) listing the video files to
-                        read (default: None)
+                        read; Supported placeholders: {HOME}, {CWD}, {TMP}
+                        (default: None)
   -t {ic,is,od}, --data_type {ic,is,od}
                         The type of data to forward (default: None)
   -F FROM_FRAME, --from_frame FROM_FRAME
@@ -51,3 +53,9 @@ options:
   -p PREFIX, --prefix PREFIX
                         The prefix to use for the frames (default: )
 ```
+
+Available placeholders:
+
+* `{HOME}`: The home directory of the current user.
+* `{CWD}`: The current working directory.
+* `{TMP}`: The temp directory.

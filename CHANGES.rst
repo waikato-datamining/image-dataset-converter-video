@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.0.3 (????-??-??)
+------------------
+
+- added support for placeholders to: `from-video-file`, `calc-frame-changes`, and `to-video-file`
+
+
 0.0.2 (2025-03-12)
 ------------------
 
