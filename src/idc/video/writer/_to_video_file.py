@@ -5,7 +5,7 @@ from typing import List
 
 from wai.logging import LOGGING_WARNING
 from idc.api import ImageData, StreamWriter, make_list
-from seppl import placeholder_list, InputBasedPlaceholderSupporter
+from seppl.placeholders import placeholder_list, InputBasedPlaceholderSupporter
 
 
 class VideoFileWriter(StreamWriter, InputBasedPlaceholderSupporter):

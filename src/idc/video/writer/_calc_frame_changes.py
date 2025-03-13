@@ -11,7 +11,7 @@ from typing import List
 from wai.logging import LOGGING_WARNING
 from idc.api import ImageData, StreamWriter, make_list
 from idc.video.util.change_detection import CONVERSION_GRAY, CONVERSIONS, detect_change
-from seppl import placeholder_list, InputBasedPlaceholderSupporter
+from seppl.placeholders import placeholder_list, InputBasedPlaceholderSupporter
 
 
 OUTPUT_FORMAT_TEXT = "text"
