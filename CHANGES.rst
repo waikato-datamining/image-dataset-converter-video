@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.0.4 (????-??-??)
+------------------
+
+- added `--resume_from` option to `from-video-file` reader that allows resuming the data processing
+  from the first file that matches this glob expression (e.g., `*/012345.avi`)
+
+
 0.0.3 (2025-03-14)
 ------------------
 

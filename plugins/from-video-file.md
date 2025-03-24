@@ -7,9 +7,9 @@ Reads frames from a video file.
 ```
 usage: from-video-file [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                        [-N LOGGER_NAME] [-i [INPUT ...]] [-I [INPUT_LIST ...]]
-                       -t {ic,is,od} [-F FROM_FRAME] [-T TO_FRAME]
-                       [-n NTH_FRAME] [-f FPS_FACTOR] [-m MAX_FRAMES]
-                       [-p PREFIX]
+                       [--resume_from RESUME_FROM] -t {ic,is,od}
+                       [-F FROM_FRAME] [-T TO_FRAME] [-n NTH_FRAME]
+                       [-f FPS_FACTOR] [-m MAX_FRAMES] [-p PREFIX]
 
 Reads frames from a video file.
 
@@ -28,6 +28,9 @@ options:
                         Path to the text file(s) listing the video files to
                         read; Supported placeholders: {HOME}, {CWD}, {TMP}
                         (default: None)
+  --resume_from RESUME_FROM
+                        Glob expression matching the file to resume from,
+                        e.g., '*/012345.avi' (default: None)
   -t {ic,is,od}, --data_type {ic,is,od}
                         The type of data to forward (default: None)
   -F FROM_FRAME, --from_frame FROM_FRAME

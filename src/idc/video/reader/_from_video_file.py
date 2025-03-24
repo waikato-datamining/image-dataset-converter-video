@@ -19,7 +19,8 @@ class VideoFileReader(Reader, PlaceholderSupporter):
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  from_frame: int = None, to_frame: int = None, nth_frame: int = None,
                  fps_factor: float = None, max_frames: int = None, prefix: str = None,
-                 data_type: str = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
+                 data_type: str = None, resume_from: str = None,
+                 logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
 
@@ -37,6 +38,8 @@ class VideoFileReader(Reader, PlaceholderSupporter):
         :type max_frames: int
         :param data_type: the type of output to generate from the images
         :type data_type: str
+        :param resume_from: the file to resume from (glob)
+        :type resume_from: str
         :param logger_name: the name to use for the logger
         :type logger_name: str
         :param logging_level: the logging level to use
@@ -52,6 +55,7 @@ class VideoFileReader(Reader, PlaceholderSupporter):
         self.fps_factor = fps_factor
         self.max_frames = max_frames
         self.prefix = prefix
+        self.resume_from = resume_from
         self._cap = None
         self._frame_no = None
         self._frame_count = None
@@ -87,6 +91,7 @@ class VideoFileReader(Reader, PlaceholderSupporter):
         parser = super()._create_argparser()
         parser.add_argument("-i", "--input", type=str, help="Path to the video file(s) to read; glob syntax is supported; " + placeholder_list(obj=self), required=False, nargs="*")
         parser.add_argument("-I", "--input_list", type=str, help="Path to the text file(s) listing the video files to read; " + placeholder_list(obj=self), required=False, nargs="*")
+        parser.add_argument("--resume_from", type=str, help="Glob expression matching the file to resume from, e.g., '*/012345.avi'", required=False)
         parser.add_argument("-t", "--data_type", choices=DATATYPES, type=str, default=None, help="The type of data to forward", required=True)
         parser.add_argument("-F", "--from_frame", type=int, default=1, help="Determines with which frame to start the stream (1-based index).", required=False)
         parser.add_argument("-T", "--to_frame", type=int, default=-1, help="Determines after which frame to stop (1-based index); ignored if <=0.", required=False)
@@ -113,6 +118,7 @@ class VideoFileReader(Reader, PlaceholderSupporter):
         self.fps_factor = ns.fps_factor
         self.max_frames = ns.max_frames
         self.prefix = ns.prefix
+        self.resume_from = ns.resume_from
 
     def generates(self) -> List:
         """
@@ -145,7 +151,7 @@ class VideoFileReader(Reader, PlaceholderSupporter):
             self.max_frames = -1
         if self.prefix is None:
             self.prefix = ""
-        self._inputs = locate_files(self.source, input_lists=self.source_list, fail_if_empty=True)
+        self._inputs = locate_files(self.source, input_lists=self.source_list, fail_if_empty=True, resume_from=self.resume_from)
 
     def read(self) -> Iterable:
         """
