@@ -32,7 +32,7 @@ setup(
     packages=find_namespace_packages(where='src'),
     install_requires=[
         "image_dataset_converter",
-        "opencv-python",
+        "opencv_python",
         "termplotlib",
         "cap_from_youtube",
         "vidgear",
