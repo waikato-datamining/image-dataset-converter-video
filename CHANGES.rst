@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.0.4 (????-??-??)
+0.0.4 (2025-04-03)
 ------------------
 
 - added `--resume_from` option to `from-video-file` reader that allows resuming the data processing
