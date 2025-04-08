@@ -7,7 +7,7 @@ Drops frames from the stream.
 
 ```
 usage: drop-frames [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                   [-N LOGGER_NAME] [-n NTH_FRAME]
+                   [-N LOGGER_NAME] [--skip] [-n NTH_FRAME]
 
 Drops frames from the stream.
 
@@ -18,6 +18,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -n NTH_FRAME, --nth_frame NTH_FRAME
                         Which nth frame to drop, e..g, '2' means to drop every
                         2nd frame; passes frames through if <=1. (default: -1)

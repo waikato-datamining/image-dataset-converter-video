@@ -7,7 +7,8 @@ Filters frames from the stream using the labels in the annotations, i.e., keeps 
 
 ```
 usage: filter-frames-by-label [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                              [-N LOGGER_NAME] [--key_label KEY_LABEL]
+                              [-N LOGGER_NAME] [--skip]
+                              [--key_label KEY_LABEL]
                               [--required_labels REQUIRED_LABELS]
                               [--excluded_labels EXCLUDED_LABELS]
                               [--key_score KEY_SCORE] [--min_score MIN_SCORE]
@@ -22,6 +23,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   --key_label KEY_LABEL
                         The meta-data key in the annotations that contains the
                         label. (default: type)

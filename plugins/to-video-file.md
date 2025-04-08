@@ -6,7 +6,7 @@ Saves the incoming images as frames in the specified MJPEG file.
 
 ```
 usage: to-video-file [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                     [-N LOGGER_NAME] -o OUTPUT_FILE [-f FPS]
+                     [-N LOGGER_NAME] [--skip] -o OUTPUT_FILE [-f FPS]
 
 Saves the incoming images as frames in the specified MJPEG file.
 
@@ -17,6 +17,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -o OUTPUT_FILE, --output_file OUTPUT_FILE
                         The MJPEG file to save the incoming frames to.
                         Supported placeholders: {INPUT_PATH}, {INPUT_NAMEEXT},

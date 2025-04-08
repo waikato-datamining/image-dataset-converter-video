@@ -7,7 +7,7 @@ Skips frames in the stream that are deemed too similar.
 
 ```
 usage: skip-similar-frames [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
-                           [-N LOGGER_NAME] [-c {gray,r,g,b}]
+                           [-N LOGGER_NAME] [--skip] [-c {gray,r,g,b}]
                            [-b BW_THRESHOLD] [-t CHANGE_THRESHOLD]
 
 Skips frames in the stream that are deemed too similar.
@@ -19,6 +19,8 @@ options:
   -N LOGGER_NAME, --logger_name LOGGER_NAME
                         The custom name to use for the logger, uses the plugin
                         name by default (default: None)
+  --skip                Disables the plugin, removing it from the pipeline.
+                        (default: False)
   -c {gray,r,g,b}, --conversion {gray,r,g,b}
                         How to convert the BGR image to a single channel
                         image. (default: gray)
