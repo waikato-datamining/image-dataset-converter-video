@@ -8,10 +8,10 @@ from seppl.placeholders import PlaceholderSupporter, placeholder_list
 from seppl.io import locate_files
 from wai.logging import LOGGING_WARNING
 
-from idc.api import DATATYPES, data_type_to_class, ImageData, Reader, FORMAT_JPEG
+from idc.api import DATATYPES, data_type_to_class, DataTypeSupporter, ImageData, Reader, FORMAT_JPEG
 
 
-class VideoFileReader(Reader, PlaceholderSupporter):
+class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
     """
     Reads frames from video files.
     """

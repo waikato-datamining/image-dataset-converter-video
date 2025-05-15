@@ -7,7 +7,7 @@ Reads frames from a Youtube video.
 ```
 usage: from-youtube [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                     [-N LOGGER_NAME] -i YOUTUBE_URL [-r RESOLUTION] -t
-                    {ic,is,od} [-F FROM_FRAME] [-T TO_FRAME] [-n NTH_FRAME]
+                    {dp,ic,is,od} [-F FROM_FRAME] [-T TO_FRAME] [-n NTH_FRAME]
                     [-m MAX_FRAMES] [-p PREFIX]
 
 Reads frames from a Youtube video.
@@ -24,7 +24,7 @@ options:
   -r RESOLUTION, --resolution RESOLUTION
                         The resolution to use, e.g., '480p' or 'best'.
                         (default: best)
-  -t {ic,is,od}, --data_type {ic,is,od}
+  -t {dp,ic,is,od}, --data_type {dp,ic,is,od}
                         The type of data to forward (default: None)
   -F FROM_FRAME, --from_frame FROM_FRAME
                         Determines with which frame to start the stream
@@ -41,3 +41,11 @@ options:
   -p PREFIX, --prefix PREFIX
                         The prefix to use for the frames (default: youtube-)
 ```
+
+The following data types are available:
+
+* dp: depth
+* ic: image classification
+* is: image segmentation
+* od: object detection
+
