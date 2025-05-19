@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.0.5 (????-??-??)
+------------------
+
+- readers now set the `image_name` rather than the `source` to avoid errors when
+  trying to determine the size of the extracted image
+
+
 0.0.4 (2025-04-03)
 ------------------
 

@@ -193,7 +193,7 @@ class YoutubeReader(Reader, DataTypeSupporter):
                     self.session.current_input,
                     "%s%08d.jpg" % (self.prefix, self._frame_no))
                 height, width, _ = frame_curr.shape
-                yield cls(source=filename, data=data, image_format=FORMAT_JPEG, image_size=(width, height))
+                yield cls(image_name=os.path.basename(filename), data=data, image_format=FORMAT_JPEG, image_size=(width, height))
             else:
                 self._cap.release()
                 self._cap = None
