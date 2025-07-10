@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.0.5 (????-??-??)
+0.0.5 (2025-07-11)
 ------------------
 
 - readers now set the `image_name` rather than the `source` to avoid errors when
