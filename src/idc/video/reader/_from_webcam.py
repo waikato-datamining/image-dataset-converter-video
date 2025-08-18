@@ -5,7 +5,8 @@ from typing import List, Iterable
 
 from wai.logging import LOGGING_WARNING
 
-from idc.api import DATATYPES, data_type_to_class, DataTypeSupporter, ImageData, Reader, FORMAT_JPEG
+from kasperl.api import Reader
+from idc.api import DATATYPES, data_type_to_class, DataTypeSupporter, ImageData, FORMAT_JPEG
 
 
 class WebcamReader(Reader, DataTypeSupporter):
