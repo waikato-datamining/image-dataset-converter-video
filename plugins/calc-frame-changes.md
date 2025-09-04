@@ -36,16 +36,19 @@ options:
                         20)
   -o OUTPUT_FILE, --output_file OUTPUT_FILE
                         The file to write to statistics to, stdout if not
-                        provided. Supported placeholders: {INPUT_PATH},
-                        {INPUT_NAMEEXT}, {INPUT_NAMENOEXT}, {INPUT_EXT},
-                        {INPUT_PARENT_PATH}, {INPUT_PARENT_NAME} (default:
-                        None)
+                        provided. Supported placeholders: {HOME}, {CWD},
+                        {TMP}, {INPUT_PATH}, {INPUT_NAMEEXT},
+                        {INPUT_NAMENOEXT}, {INPUT_EXT}, {INPUT_PARENT_PATH},
+                        {INPUT_PARENT_NAME} (default: None)
   -f {text,csv,json}, --output_format {text,csv,json}
                         The format to use for the statistics. (default: text)
 ```
 
 Available placeholders:
 
+* `{HOME}`: The home directory of the current user.
+* `{CWD}`: The current working directory.
+* `{TMP}`: The temp directory.
 * `{INPUT_PATH}`: The directory part of the current input, i.e., `/some/where` of input `/some/where/file.txt`.
 * `{INPUT_NAMEEXT}`: The name (incl extension) of the current input, i.e., `file.txt` of input `/some/where/file.txt`.
 * `{INPUT_NAMENOEXT}`: The name (excl extension) of the current input, i.e., `file` of input `/some/where/file.txt`.
