@@ -1,13 +1,13 @@
 import argparse
 from typing import List
 
-from seppl.io import Filter
+from seppl.io import BatchFilter
 from wai.logging import LOGGING_WARNING
 from kasperl.api import make_list, flatten_list
 from idc.api import ImageData, ImageClassificationData, ImageSegmentationData, ObjectDetectionData
 
 
-class DropFrames(Filter):
+class DropFrames(BatchFilter):
     """
     Drops frames from the stream.
     """

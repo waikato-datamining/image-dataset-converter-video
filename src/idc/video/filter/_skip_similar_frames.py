@@ -3,14 +3,14 @@ import cv2
 import numpy as np
 from typing import List
 
-from seppl.io import Filter
+from seppl.io import BatchFilter
 from wai.logging import LOGGING_WARNING
 from kasperl.api import make_list, flatten_list
 from idc.api import ImageData, ImageClassificationData, ImageSegmentationData, ObjectDetectionData
 from idc.video.util.change_detection import CONVERSION_GRAY, CONVERSIONS, detect_change
 
 
-class SkipSimilarFrames(Filter):
+class SkipSimilarFrames(BatchFilter):
     """
     Skips frames in the stream that are deemed too similar.
     """

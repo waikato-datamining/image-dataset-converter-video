@@ -1,14 +1,14 @@
 import argparse
 from typing import List
 
-from seppl.io import Filter
+from seppl.io import BatchFilter
 from wai.logging import LOGGING_WARNING
 
 from kasperl.api import make_list, flatten_list
 from idc.api import ObjectDetectionData, LABEL_KEY
 
 
-class FilterFramesByLabel(Filter):
+class FilterFramesByLabel(BatchFilter):
     """
     Filters frames from the stream using the labels in the annotations, i.e., keeps or drops frames depending on presence/absence of labels.
     """
