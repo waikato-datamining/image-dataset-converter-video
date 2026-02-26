@@ -6,7 +6,7 @@ Changelog
 
 - the readers `from-video-file`, `from-webcam`, `from-youtube`, `from-youtube-live` now can use a more efficient
   `grab/retrieve` combination instead of `read` to obtain frames, to avoid unnecessary decoding of skipped frames
-  (`--fast`)
+  (`--fast`); also added the `--ignore_errors` flag to skip frame capture errors
 
 
 0.1.0 (2025-10-31)

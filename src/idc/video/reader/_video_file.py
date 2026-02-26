@@ -19,7 +19,7 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  from_frame: int = None, to_frame: int = None, nth_frame: int = None,
-                 fps_factor: float = None, max_frames: int = None, fast: bool = None,
+                 fps_factor: float = None, max_frames: int = None, fast: bool = None, ignore_errors: bool = None,
                  prefix: str = None, data_type: str = None, resume_from: str = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
@@ -41,6 +41,8 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
         :type fast: bool
         :param data_type: the type of output to generate from the images
         :type data_type: str
+        :param ignore_errors: whether to ignore frame capture errors
+        :type ignore_errors: bool
         :param resume_from: the file to resume from (glob)
         :type resume_from: str
         :param logger_name: the name to use for the logger
@@ -58,6 +60,7 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
         self.fps_factor = fps_factor
         self.max_frames = max_frames
         self.fast = fast
+        self.ignore_errors = ignore_errors
         self.prefix = prefix
         self.resume_from = resume_from
         self._cap = None
@@ -103,6 +106,7 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
         parser.add_argument("-f", "--fps_factor", type=float, default=None, help="Multiplier applied to the frames-per-second (fps) of the video and rounded up (ceiling) to determine the actual nth frame to return; overrides -n/--nth_frame.", required=False)
         parser.add_argument("-m", "--max_frames", type=int, default=-1, help="Determines the maximum number of frames to read; ignored if <=0.", required=False)
         parser.add_argument("--fast", action="store_true", help="Whether to perform fast frame extraction.", required=False)
+        parser.add_argument("--ignore_errors", action="store_true", help="Whether to ignore frame capture errors.", required=False)
         parser.add_argument("-p", "--prefix", type=str, help="The prefix to use for the frames", required=False, default="")
         return parser
 
@@ -123,6 +127,7 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
         self.fps_factor = ns.fps_factor
         self.max_frames = ns.max_frames
         self.fast = ns.fast
+        self.ignore_errors = ns.ignore_errors
         self.prefix = ns.prefix
         self.resume_from = ns.resume_from
 
@@ -157,6 +162,8 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
             self.max_frames = -1
         if self.fast is None:
             self.fast = False
+        if self.ignore_errors is None:
+            self.ignore_errors = False
         if self.prefix is None:
             self.prefix = ""
         self._inputs = None
@@ -238,8 +245,9 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
                 height, width, _ = frame_curr.shape
                 yield cls(image_name=os.path.basename(filename), data=data, image_format=FORMAT_JPEG, image_size=(width, height))
             else:
-                self._cap.release()
-                self._cap = None
+                if not self.ignore_errors:
+                    self._cap.release()
+                    self._cap = None
 
     def has_finished(self) -> bool:
         """
