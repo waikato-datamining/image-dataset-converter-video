@@ -19,8 +19,8 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
 
     def __init__(self, source: Union[str, List[str]] = None, source_list: Union[str, List[str]] = None,
                  from_frame: int = None, to_frame: int = None, nth_frame: int = None,
-                 fps_factor: float = None, max_frames: int = None, prefix: str = None,
-                 data_type: str = None, resume_from: str = None,
+                 fps_factor: float = None, max_frames: int = None, fast: bool = None,
+                 prefix: str = None, data_type: str = None, resume_from: str = None,
                  logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
@@ -37,6 +37,8 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
         :type fps_factor: float
         :param max_frames: the maximum number of frames to read
         :type max_frames: int
+        :param fast: whether to perform fast frame extraction
+        :type fast: bool
         :param data_type: the type of output to generate from the images
         :type data_type: str
         :param resume_from: the file to resume from (glob)
@@ -55,6 +57,7 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
         self.nth_frame = nth_frame
         self.fps_factor = fps_factor
         self.max_frames = max_frames
+        self.fast = fast
         self.prefix = prefix
         self.resume_from = resume_from
         self._cap = None
@@ -99,6 +102,7 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
         parser.add_argument("-n", "--nth_frame", type=int, default=1, help="Determines whether frames get skipped and only evert nth frame gets forwarded; <1 uses rounded up fraction of frames-per-second in the video, e.g. 0.2 of video with 25 fps results in every 5th frame being returned.", required=False)
         parser.add_argument("-f", "--fps_factor", type=float, default=None, help="Multiplier applied to the frames-per-second (fps) of the video and rounded up (ceiling) to determine the actual nth frame to return; overrides -n/--nth_frame.", required=False)
         parser.add_argument("-m", "--max_frames", type=int, default=-1, help="Determines the maximum number of frames to read; ignored if <=0.", required=False)
+        parser.add_argument("--fast", action="store_true", help="Whether to perform fast frame extraction.", required=False)
         parser.add_argument("-p", "--prefix", type=str, help="The prefix to use for the frames", required=False, default="")
         return parser
 
@@ -118,6 +122,7 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
         self.nth_frame = ns.nth_frame
         self.fps_factor = ns.fps_factor
         self.max_frames = ns.max_frames
+        self.fast = ns.fast
         self.prefix = ns.prefix
         self.resume_from = ns.resume_from
 
@@ -150,6 +155,8 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
             raise Exception("nth_frame must be at least 1, provided: %d" % self.nth_frame)
         if self.max_frames is None:
             self.max_frames = -1
+        if self.fast is None:
+            self.fast = False
         if self.prefix is None:
             self.prefix = ""
         self._inputs = None
@@ -193,7 +200,11 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
             # next frame
             self._frame_no += 1
             count += 1
-            retval = self._cap.grab()
+            if self.fast:
+                retval = self._cap.grab()
+                frame_curr = None
+            else:
+                retval, frame_curr = self._cap.read()
 
             if retval:
                 # within frame window?
@@ -212,9 +223,10 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
                 if (self.max_frames > 0) and (self._frame_count >= self.max_frames):
                     break
 
-                retval, frame_curr = self._cap.retrieve()
-                if not retval:
-                    continue
+                if self.fast:
+                    retval, frame_curr = self._cap.retrieve()
+                    if not retval:
+                        continue
 
                 self._frame_count += 1
                 count = 0

@@ -9,7 +9,7 @@ usage: from-video-file [-h] [-l {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
                        [-N LOGGER_NAME] [-i [INPUT ...]] [-I [INPUT_LIST ...]]
                        [--resume_from RESUME_FROM] -t {dp,ic,is,od}
                        [-F FROM_FRAME] [-T TO_FRAME] [-n NTH_FRAME]
-                       [-f FPS_FACTOR] [-m MAX_FRAMES] [-p PREFIX]
+                       [-f FPS_FACTOR] [-m MAX_FRAMES] [--fast] [-p PREFIX]
 
 Reads frames from a video file.
 
@@ -53,6 +53,8 @@ options:
   -m MAX_FRAMES, --max_frames MAX_FRAMES
                         Determines the maximum number of frames to read;
                         ignored if <=0. (default: -1)
+  --fast                Whether to perform fast frame extraction. (default:
+                        False)
   -p PREFIX, --prefix PREFIX
                         The prefix to use for the frames (default: )
 ```

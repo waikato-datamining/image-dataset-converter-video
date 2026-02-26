@@ -18,7 +18,7 @@ class YoutubeLiveReader(Reader, DataTypeSupporter):
     """
 
     def __init__(self, url: str = None, resolution: str = None, from_frame: int = None, to_frame: int = None,
-                 nth_frame: int = None, max_frames: int = None, prefix: str = None,
+                 nth_frame: int = None, max_frames: int = None, fast: bool = None, prefix: str = None,
                  data_type: str = None, logger_name: str = None, logging_level: str = LOGGING_WARNING):
         """
         Initializes the reader.
@@ -35,6 +35,8 @@ class YoutubeLiveReader(Reader, DataTypeSupporter):
         :type nth_frame: int
         :param max_frames: the maximum number of frames to read
         :type max_frames: int
+        :param fast: whether to perform fast frame extraction
+        :type fast: bool
         :param data_type: the type of output to generate from the images
         :type data_type: str
         :param logger_name: the name to use for the logger
@@ -50,6 +52,7 @@ class YoutubeLiveReader(Reader, DataTypeSupporter):
         self.to_frame = to_frame
         self.nth_frame = nth_frame
         self.max_frames = max_frames
+        self.fast = fast
         self.prefix = prefix
         self._cap = None
         self._frame_no = None
@@ -90,6 +93,7 @@ class YoutubeLiveReader(Reader, DataTypeSupporter):
         parser.add_argument("-T", "--to_frame", type=int, default=-1, help="Determines after which frame to stop (1-based index); ignored if <=0.", required=False)
         parser.add_argument("-n", "--nth_frame", type=int, default=1, help="Determines whether frames get skipped and only evert nth frame gets forwarded.", required=False)
         parser.add_argument("-m", "--max_frames", type=int, default=-1, help="Determines the maximum number of frames to read; ignored if <=0.", required=False)
+        parser.add_argument("--fast", action="store_true", help="Whether to perform fast frame extraction.", required=False)
         parser.add_argument("-p", "--prefix", type=str, help="The prefix to use for the frames", required=False, default="youtube-")
         return parser
 
@@ -108,6 +112,7 @@ class YoutubeLiveReader(Reader, DataTypeSupporter):
         self.to_frame = ns.to_frame
         self.nth_frame = ns.nth_frame
         self.max_frames = ns.max_frames
+        self.fast = ns.fast
         self.prefix = ns.prefix
 
     def generates(self) -> List:
@@ -141,6 +146,8 @@ class YoutubeLiveReader(Reader, DataTypeSupporter):
             raise Exception("nth_frame must be at least 1, provided: %d" % self.nth_frame)
         if self.max_frames is None:
             self.max_frames = -1
+        if self.fast is None:
+            self.fast = False
         if self.prefix is None:
             self.prefix = ""
         if self.resolution is None:
@@ -173,9 +180,13 @@ class YoutubeLiveReader(Reader, DataTypeSupporter):
             # next frame
             self._frame_no += 1
             count += 1
-            retval = self._cap.grab()
+            if self.fast:
+                retval = self._cap.grab()
+                frame_curr = None
+            else:
+                retval, frame_curr = self._cap.read()
 
-            if frame_curr is not None:
+            if retval:
                 # within frame window?
                 if self.from_frame > 0:
                     if self._frame_no < self.from_frame:
@@ -192,9 +203,10 @@ class YoutubeLiveReader(Reader, DataTypeSupporter):
                 if (self.max_frames > 0) and (self._frame_count >= self.max_frames):
                     break
 
-                retval, frame_curr = self._cap.retrieve()
-                if not retval:
-                    continue
+                if self.fast:
+                    retval, frame_curr = self._cap.retrieve()
+                    if not retval:
+                        continue
 
                 self._frame_count += 1
                 count = 0
