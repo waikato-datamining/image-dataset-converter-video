@@ -173,7 +173,7 @@ class YoutubeLiveReader(Reader, DataTypeSupporter):
             # next frame
             self._frame_no += 1
             count += 1
-            frame_curr = self._cap.read()
+            retval = self._cap.grab()
 
             if frame_curr is not None:
                 # within frame window?
@@ -191,6 +191,10 @@ class YoutubeLiveReader(Reader, DataTypeSupporter):
                 # max frames reached?
                 if (self.max_frames > 0) and (self._frame_count >= self.max_frames):
                     break
+
+                retval, frame_curr = self._cap.retrieve()
+                if not retval:
+                    continue
 
                 self._frame_count += 1
                 count = 0

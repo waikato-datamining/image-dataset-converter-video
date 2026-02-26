@@ -168,7 +168,7 @@ class YoutubeReader(Reader, DataTypeSupporter):
             # next frame
             self._frame_no += 1
             count += 1
-            retval, frame_curr = self._cap.read()
+            retval = self._cap.grab()
 
             if retval:
                 # within frame window?
@@ -186,6 +186,10 @@ class YoutubeReader(Reader, DataTypeSupporter):
                 # max frames reached?
                 if (self.max_frames > 0) and (self._frame_count >= self.max_frames):
                     break
+
+                retval, frame_curr = self._cap.retrieve()
+                if not retval:
+                    continue
 
                 self._frame_count += 1
                 count = 0

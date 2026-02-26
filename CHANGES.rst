@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.1.1 (????-??-??)
+------------------
+
+- the readers `from-video-file`, `from-webcam`, `from-youtube`, `from-youtube-live` now use the more efficient
+  `grab/retrieve` combination instead of `read` to obtain frames, to avoid unnecessary decoding of skipped frames
+
+
 0.1.0 (2025-10-31)
 ------------------
 
