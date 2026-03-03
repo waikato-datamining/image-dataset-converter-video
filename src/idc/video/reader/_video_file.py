@@ -236,6 +236,7 @@ class VideoFileReader(Reader, PlaceholderSupporter, DataTypeSupporter):
                         continue
 
                 self._frame_count += 1
+                count = 0
                 data = cv2.imencode(".jpg", frame_curr)[1].tobytes()
                 prefix = (os.path.splitext(os.path.basename(self.session.current_input))[0] + "-") if (len(self.prefix) == 0) else self.prefix
                 filename = os.path.join(
