@@ -6,10 +6,10 @@ from typing import List
 from wai.logging import LOGGING_WARNING
 from kasperl.api import make_list, StreamWriter
 from idc.api import ImageData
-from seppl.placeholders import placeholder_list, InputBasedPlaceholderSupporter
+from seppl.variables import InputBasedVariableSupporter, variable_list
 
 
-class VideoFileWriter(StreamWriter, InputBasedPlaceholderSupporter):
+class VideoFileWriter(StreamWriter, InputBasedVariableSupporter):
     """
     Saves the incoming images as frames in the specified MJPEG file.
     """
@@ -60,7 +60,7 @@ class VideoFileWriter(StreamWriter, InputBasedPlaceholderSupporter):
         :rtype: argparse.ArgumentParser
         """
         parser = super()._create_argparser()
-        parser.add_argument("-o", "--output_file", type=str, help="The MJPEG file to save the incoming frames to. " + placeholder_list(obj=self), required=True)
+        parser.add_argument("-o", "--output_file", type=str, help="The MJPEG file to save the incoming frames to. " + variable_list(obj=self), required=True)
         parser.add_argument("-f", "--fps", metavar="FPS", type=int, default=25, help="The frames-per-second to use for the video.", required=False)
         return parser
 
@@ -99,7 +99,7 @@ class VideoFileWriter(StreamWriter, InputBasedPlaceholderSupporter):
         :param data: the data to write (single record or iterable of records)
         """
         for item in make_list(data):
-            output_file = self.session.expand_placeholders(self.output_file)
+            output_file = self.session.expand_variables(self.output_file)
             if (self._out is None) or (output_file != self._last_output_file):
                 self._close_stream()
                 w, h = item.image.size

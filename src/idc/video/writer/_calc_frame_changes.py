@@ -12,7 +12,7 @@ from wai.logging import LOGGING_WARNING
 from kasperl.api import make_list, StreamWriter
 from idc.api import ImageData
 from idc.video.util.change_detection import CONVERSION_GRAY, CONVERSIONS, detect_change
-from seppl.placeholders import placeholder_list, InputBasedPlaceholderSupporter
+from seppl.variables import InputBasedVariableSupporter, variable_list
 
 
 OUTPUT_FORMAT_TEXT = "text"
@@ -25,7 +25,7 @@ OUTPUT_FORMATS = [
 ]
 
 
-class CalcFrameChanges(StreamWriter, InputBasedPlaceholderSupporter):
+class CalcFrameChanges(StreamWriter, InputBasedVariableSupporter):
     """
     Calculates the changes between frames, which can be used with the skip-similar-frames filter.
     """
@@ -92,7 +92,7 @@ class CalcFrameChanges(StreamWriter, InputBasedPlaceholderSupporter):
         parser.add_argument("-b", "--bw_threshold", type=int, help="The threshold to use for converting a gray-scale like image to black and white (0-255).", required=False, default=128)
         parser.add_argument("-t", "--change_threshold", type=float, help="The ratio of pixels that changed relative to size of image (0-1).", required=False, default=0.01)
         parser.add_argument("-B", "--num_bins", type=int, help="The number of bins to use for the histogram.", required=False, default=20)
-        parser.add_argument("-o", "--output_file", type=str, help="The file to write to statistics to, stdout if not provided. " + placeholder_list(obj=self), required=False, default=None)
+        parser.add_argument("-o", "--output_file", type=str, help="The file to write to statistics to, stdout if not provided. " + variable_list(obj=self), required=False, default=None)
         parser.add_argument("-f", "--output_format", choices=OUTPUT_FORMATS, default=OUTPUT_FORMAT_TEXT, help="The format to use for the statistics.", required=False)
         return parser
 
@@ -173,7 +173,7 @@ class CalcFrameChanges(StreamWriter, InputBasedPlaceholderSupporter):
             return
 
         use_stdout = (self.output_file is None) or (len(self.output_file) == 0)
-        output_file = (None if use_stdout else self.session.expand_placeholders(self.output_file))
+        output_file = (None if use_stdout else self.session.expand_variables(self.output_file))
         if output_file is not None:
             self.logger().info("Writing stats to: %s" % output_file)
         counts, bin_edges = np.histogram(self._ratios, bins=self.num_bins)
