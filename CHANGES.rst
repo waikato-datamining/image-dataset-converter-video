@@ -9,6 +9,8 @@ Changelog
   (`--fast`)
 - using `seppl.variables` now
 - `drop-frames` and `skip-similar-frames` are now derived from `DiscardFilter`
+- added `skip-similar-frames2` filter that uses difference hash and mean absolute difference for calculating similarity
+  (based on Jinzheng Meng's work)
 
 
 0.1.0 (2025-10-31)

@@ -9,6 +9,7 @@
 * [drop-frames](drop-frames.md)
 * [filter-frames-by-label](filter-frames-by-label.md)
 * [skip-similar-frames](skip-similar-frames.md)
+* [skip-similar-frames2](skip-similar-frames2.md)
 
 ## Writers
 * [calc-frame-changes](calc-frame-changes.md)
