@@ -1,16 +1,17 @@
 import argparse
-import cv2
-import numpy as np
 from typing import List
 
-from seppl.io import BatchFilter
+import cv2
+import numpy as np
 from wai.logging import LOGGING_WARNING
-from kasperl.api import make_list, flatten_list
+
 from idc.api import ImageData, ImageClassificationData, ImageSegmentationData, ObjectDetectionData
+from idc.filter import DiscardFilter
 from idc.video.util.change_detection import CONVERSION_GRAY, CONVERSIONS, detect_change
+from kasperl.api import make_list, flatten_list
 
 
-class SkipSimilarFrames(BatchFilter):
+class SkipSimilarFrames(DiscardFilter):
     """
     Skips frames in the stream that are deemed too similar.
     """
@@ -133,11 +134,14 @@ class SkipSimilarFrames(BatchFilter):
             # detect change
             ratio, changed = detect_change(self._last_image, img,
                                            self.conversion, self.bw_threshold, self.change_threshold)
-            self.logger().info("%s (ratio/changed): %f -> %s" % (item.image_name, ratio, str(changed)))
+            self.logger().debug("%s (ratio/changed): %f -> %s" % (item.image_name, ratio, str(changed)))
 
             if changed:
                 # shift state
                 self._last_image = img
+                self._keep(item)
                 result.append(item)
+            else:
+                self._discard(item)
 
         return flatten_list(result)

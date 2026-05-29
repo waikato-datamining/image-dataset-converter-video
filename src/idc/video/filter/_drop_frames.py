@@ -1,13 +1,13 @@
 import argparse
 from typing import List
 
-from seppl.io import BatchFilter
 from wai.logging import LOGGING_WARNING
 from kasperl.api import make_list, flatten_list
 from idc.api import ImageData, ImageClassificationData, ImageSegmentationData, ObjectDetectionData
+from idc.filter import DiscardFilter
 
 
-class DropFrames(BatchFilter):
+class DropFrames(DiscardFilter):
     """
     Drops frames from the stream.
     """
@@ -104,6 +104,9 @@ class DropFrames(BatchFilter):
             if item is not None:
                 self._count += 1
                 if (self._count % self.nth_frame) != 0:
+                    self._keep(item)
                     result.append(item)
+                else:
+                    self._discard(item)
 
         return flatten_list(result)

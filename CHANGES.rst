@@ -8,6 +8,7 @@ Changelog
   `grab/retrieve` combination instead of `read` to obtain frames, to avoid unnecessary decoding of skipped frames
   (`--fast`)
 - using `seppl.variables` now
+- `drop-frames` and `skip-similar-frames` are now derived from `DiscardFilter`
 
 
 0.1.0 (2025-10-31)
